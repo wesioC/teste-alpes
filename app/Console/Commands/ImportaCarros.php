@@ -13,7 +13,7 @@ class ImportaCarros extends Command
      *
      * @var string
      */
-    protected $signature = 'app:importa-carros';
+    protected $signature = 'importa-carros';
 
     /**
      * The console command description.

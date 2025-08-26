@@ -33,5 +33,6 @@ class Carro extends Model
         'fotos',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
 }
