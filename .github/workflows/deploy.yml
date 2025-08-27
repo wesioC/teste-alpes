@@ -29,5 +29,5 @@ jobs:
             php artisan route:cache
             php artisan view:cache
             sudo systemctl restart nginx
-            sudo systemctl restart php8.1-fpm
+            sudo systemctl restart php-fpm
           EOF
