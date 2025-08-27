@@ -51,56 +51,76 @@ Esta API permite criar, listar, atualizar, consultar e excluir carros, além de 
 ```
 
 ---
+
 ## 🔹 Configurar o ambiente
 
-    # 1. Clone o repositório na sua máquina
-    git clone https://github.com/wesioC/teste-alpes.git
-    cd teste-alpes
-    git pull
-    git checkout dev
+```bash
+# 1. Clone o repositório na sua máquina
+git clone https://github.com/wesioC/teste-alpes.git
+cd teste-alpes
+git pull
+git checkout dev
+```
+# 2. Copie o arquivo de ambiente e configure variáveis
+```bash
+cp .env.example .env
+nano .env
+```
 
-    # 2. Copie o arquivo de ambiente e configure variáveis
-    cp .env.example .env
-    nano .env
+# Configure para usar o Sail (Docker) com MySQL:
+```bash
+# DB_CONNECTION=mysql
+# DB_HOST=mysql
+# DB_PORT=3306
+# DB_DATABASE=laravel
+# DB_USERNAME=sail
+# DB_PASSWORD=password
+```
+# 3. Instale o Sail (caso ainda não esteja)
+```bash
+composer require laravel/sail --dev
+php artisan sail:install
+```
+# Escolha os serviços que deseja (MySQL, Redis, etc). Para este projeto, MySQL é suficiente.
 
-    # Configure para usar o Sail (Docker) com MySQL:
-    # DB_CONNECTION=mysql
-    # DB_HOST=mysql
-    # DB_PORT=3306
-    # DB_DATABASE=laravel
-    # DB_USERNAME=sail
-    # DB_PASSWORD=password
+# 4. Suba os containers Docker
+```bash
+./vendor/bin/sail up -d
+```
+# Isso vai criar os containers com PHP, MySQL e outros serviços configurados.
 
-    # 3. Instale o Sail (caso ainda não esteja)
-    composer require laravel/sail --dev
-    php artisan sail:install
+# 5. Instale dependências do projeto
+```bash
+./vendor/bin/sail composer install --no-dev --optimize-autoloader
+```
+# 6. Gere a chave da aplicação
+```bash
+./vendor/bin/sail artisan key:generate
+```
 
-    # Escolha os serviços que deseja (MySQL, Redis, etc). Para este projeto, MySQL é suficiente.
+# 7. Rode as migrations
+```bash
+./vendor/bin/sail artisan migrate 
+```
 
-    # 4. Suba os containers Docker
-    ./vendor/bin/sail up -d
-    # Isso vai criar os containers com PHP, MySQL e outros serviços configurados.
+# 8. Ajuste permissões para logs e cache (se necessário)
+```bash
+chmod -R 775 storage bootstrap/cache
+```
 
-    # 5. Instale dependências do projeto
-    ./vendor/bin/sail composer install --no-dev --optimize-autoloader
+# 9. Rodar o servidor local
+```bash
+./vendor/bin/sail artisan serve
+```
+# A aplicação ficará disponível em http://localhost ou  http://127.0.0.1
 
-    # 6. Gere a chave da aplicação
-    ./vendor/bin/sail artisan key:generate
+# 10. Rodar o scheduler ou comando de importação manualmente (opcional)
+```bash
+./vendor/bin/sail artisan schedule:run
+./vendor/bin/sail artisan importa-carros
+```
 
-    # 7. Rode as migrations e seeders
-    ./vendor/bin/sail artisan migrate --seed
-
-    # 8. Ajuste permissões para logs e cache (se necessário)
-    chmod -R 775 storage bootstrap/cache
-
-    # 9. Rodar o servidor local
-    ./vendor/bin/sail artisan serve
-    # A aplicação ficará disponível em http://localhost
-
-    # 10. Rodar o scheduler ou comando de importação manualmente (opcional)
-    ./vendor/bin/sail artisan schedule:run
-    ./vendor/bin/sail artisan importa-carros
-
+---
 
 ## 🔹 Executar o comando de importação
 
@@ -116,6 +136,8 @@ ou
 php artisan schedule:run
 ```
 
+---
+
 ## 🔹 Rodar a aplicação e testes
 
 1. Limpar e gerar caches:
@@ -125,7 +147,8 @@ php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 ```
-2. Rodar testes :
+
+2. Rodar testes:
 
 ```bash
 php artisan test
@@ -136,7 +159,7 @@ php artisan test
 ## 🔹 Deploy
 
 - **Automático via GitHub Actions**: o workflow atual faz pull do `main`, instala dependências e limpa caches.  
-- **Manual**: execute o script de deploy ( é necessário ter o pem na raiz do projeto):
+- **Manual**: execute o script de deploy (é necessário ter o pem na raiz do projeto):
 
 ```bash
 cd /var/www/teste-alpes
@@ -180,11 +203,13 @@ Você pode importar no **Postman** usando esta variável de ambiente:
 }
 ```
 
-Use `{{base_url}}/api/cars` nos requests do Postman ou importe a collection que está no repositório junto ao envirioment
+Use `{{base_url}}/api/cars` nos requests do Postman ou importe a collection que está no repositório junto ao environment.
 
+---
 
 ## 🔹 Requisitos para rodar o projeto localmente
 
+```bash
 # 1. Docker e Docker Compose
 # - Laravel Sail roda em containers, então é necessário ter o Docker instalado.
 # - Instale o Docker Desktop ou Docker Engine conforme seu sistema operacional.
@@ -203,3 +228,4 @@ composer --version
 # 4. Git
 # - Para clonar o repositório e controlar versionamento.
 git --version
+```
