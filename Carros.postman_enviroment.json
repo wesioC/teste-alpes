@@ -1,0 +1,24 @@
+{
+  "id": "8a7d1b20-2c64-4b0d-9e77-123456789abc",
+  "name": "Carros API Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1",
+      "enabled": true
+    },
+    {
+      "key": "local_url",
+      "value": "http://localhost",
+      "enabled": false
+    },
+    {
+      "key": "prod_url",
+      "value": "https://alpes.wesio.online",
+      "enabled": false
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2025-08-25T01:00:00Z",
+  "_postman_exported_using": "Postman/10.21.9"
+}
