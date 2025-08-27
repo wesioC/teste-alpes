@@ -31,8 +31,25 @@ class Carro extends Model
         'color',
         'fuel',
         'fotos',
-        'created_at',
-        'updated_at',
-        'deleted_at',
     ];
+
+    protected $casts = [
+        'optionals' => 'array',
+        'fotos'     => 'array',
+        'sold'      => 'boolean',
+    ];
+
+    public function setYearAttribute($value)
+    {
+        $this->attributes['year_model'] = $value['model'] ?? null;
+        $this->attributes['year_build'] = $value['build'] ?? null;
+    }
+
+    public function getYearAttribute()
+    {
+        return [
+            'model' => $this->year_model,
+            'build' => $this->year_build,
+        ];
+    }
 }

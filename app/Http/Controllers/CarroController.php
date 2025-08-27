@@ -4,21 +4,26 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Carro;
+use App\Http\Resources\CarroResource;
+use App\Http\Requests\CarroRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class CarroController extends Controller
 {
 
     public function index()
     {
-        $carros = Carro::all();
-        return response()->json($carros);
+        return CarroResource::collection(Carro::all());
     }
 
 
-    public function store(Request $request)
+    public function store(CarroRequest $request)
     {
-        $carro = Carro::create($request->all());
+        $carro = Carro::create($request->validated());
+        if (!$carro) {
+            return response()->json(['message' => 'Error creating car'], 500);
+        }
         return response()->json($carro, 201);
     }
 
@@ -29,17 +34,21 @@ class CarroController extends Controller
         if (!$carro) {
             return response()->json(['message' => 'Car not found'], 404);
         }
-        return response()->json($carro);
+        return new CarroResource($carro);
     }
 
 
-    public function update(Request $request, string $id)
+    public function update(CarroRequest $request, string $id)
     {
         $carro = Carro::find($id);
         if (!$carro) {
             return response()->json(['message' => 'Car not found'], 404);
         }
-        $carro->update($request->all());
+        $data = $request->validated();
+        $data['year_model'] = $data['year']['model'] ?? $carro->year_model;
+        $data['year_build'] = $data['year']['build'] ?? $carro->year_build;
+        unset($data['year']);
+        $carro->update($data);
         return response()->json($carro);
     }
 

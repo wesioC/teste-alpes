@@ -1,0 +1,82 @@
+{
+  "info": {
+    "name": "Carros API",
+    "_postman_id": "b1c3b5e5-efcd-4a6b-8af2-123456789abc",
+    "description": "Collection para testar o CRUD de Carros com variáveis de ambiente",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Listar todos os carros",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/carros",
+          "host": ["{{base_url}}"],
+          "path": ["api", "carros"]
+        }
+      }
+    },
+    {
+      "name": "Criar carro",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"type\": \"carro\",\n  \"brand\": \"Hyundai\",\n  \"model\": \"CRETA\",\n  \"version\": \"CRETA 16A ACTION\",\n  \"year\": {\n    \"model\": 2025,\n    \"build\": 2025\n  },\n  \"optionals\": [],\n  \"doors\": 5,\n  \"board\": \"JCU2I93\",\n  \"chassi\": \"\",\n  \"transmission\": \"Automática\",\n  \"km\": 24208,\n  \"description\": \"Carro revisado\",\n  \"sold\": false,\n  \"category\": \"SUV\",\n  \"url_car\": \"hyundai-creta-2025-automatica-125306\",\n  \"price\": 115900.00,\n  \"color\": \"Branco\",\n  \"fuel\": \"Gasolina\",\n  \"fotos\": [\n    \"https://alpes-hub.s3.amazonaws.com/img1.jpeg\",\n    \"https://alpes-hub.s3.amazonaws.com/img2.jpeg\"\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/carros",
+          "host": ["{{base_url}}"],
+          "path": ["api", "carros"]
+        }
+      }
+    },
+    {
+      "name": "Mostrar carro por ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/carros/999999",
+          "host": ["{{base_url}}"],
+          "path": ["api", "carros", "999999"]
+        }
+      }
+    },
+    {
+      "name": "Atualizar carro",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"color\": \"Branco\",\n  \"km\": 20000\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/carros/999999",
+          "host": ["{{base_url}}"],
+          "path": ["api", "carros", "999999"]
+        }
+      }
+    },
+    {
+      "name": "Deletar carro",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/carros/999999",
+          "host": ["{{base_url}}"],
+          "path": ["api", "carros", "999999"]
+        }
+      }
+    }
+  ]
+}
