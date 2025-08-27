@@ -3,18 +3,18 @@
   "name": "Carros API Environment",
   "values": [
     {
+      "key": "prod_url",
+      "value": "https://alpes.wesio.online",
+      "enabled": true
+    },
+    {
       "key": "base_url",
       "value": "http://127.0.0.1",
-      "enabled": true
+      "enabled": false
     },
     {
       "key": "local_url",
       "value": "http://localhost",
-      "enabled": false
-    },
-    {
-      "key": "prod_url",
-      "value": "https://alpes.wesio.online",
       "enabled": false
     }
   ],

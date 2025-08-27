@@ -13,16 +13,9 @@ PEM_FILE="wesio.pem"  # Caminho para a sua chave .pem
 echo ">>> Iniciando deploy para a instância $EC2_HOST..."
 
 # -----------------------------
-# PASSO 1: COPIAR ARQUIVOS
+# PASSO 1: ATUALIZAR CÓDIGO
 # -----------------------------
-echo ">>> [Passo 1/2] Copiando arquivos para a EC2..."
-rsync -avz --delete -e "ssh -i $PEM_FILE -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null" ./* $EC2_USER@$EC2_HOST:$TARGET_DIR
-echo ">>> Arquivos copiados com sucesso."
-
-# -----------------------------
-# PASSO 2: REINICIAR SERVIDOR
-# -----------------------------
-echo ">>> [Passo 2/2] Reiniciando o servidor na EC2..."
+echo ">>> [Passo 1/2] Atualizando código via Git na EC2..."
 ssh -i $PEM_FILE -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $EC2_USER@$EC2_HOST << 'EOF'
     echo ">>> Conectado à EC2"
 
@@ -33,6 +26,9 @@ ssh -i $PEM_FILE -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $EC
     echo ">>> Instalando dependências PHP..."
     composer install --no-dev --optimize-autoloader
 
+    echo ">>> Executando migrações..."
+    php artisan migrate
+
     echo ">>> Limpando e cacheando Laravel..."
     php artisan cache:clear
     php artisan config:cache
@@ -41,7 +37,7 @@ ssh -i $PEM_FILE -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $EC
 
     echo ">>> Reiniciando serviços..."
     sudo systemctl restart nginx
-    sudo systemctl restart php8.1-fpm
+    sudo systemctl restart php-fpm
 
     echo ">>> Servidor reiniciado com sucesso!"
 EOF
