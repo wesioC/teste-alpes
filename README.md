@@ -51,50 +51,56 @@ Esta API permite criar, listar, atualizar, consultar e excluir carros, além de 
 ```
 
 ---
-
 ## 🔹 Configurar o ambiente
 
-1. Clone o repositório no EC2:
+    # 1. Clone o repositório na sua máquina
+    git clone https://github.com/wesioC/teste-alpes.git
+    cd teste-alpes
+    git pull
+    git checkout dev
 
-2. Copie o arquivo de ambiente e configure variáveis:
+    # 2. Copie o arquivo de ambiente e configure variáveis
+    cp .env.example .env
+    nano .env
 
-```bash
-cp .env.example .env
-nano .env
-```
+    # Configure para usar o Sail (Docker) com MySQL:
+    # DB_CONNECTION=mysql
+    # DB_HOST=mysql
+    # DB_PORT=3306
+    # DB_DATABASE=laravel
+    # DB_USERNAME=sail
+    # DB_PASSWORD=password
 
-Configure:
+    # 3. Instale o Sail (caso ainda não esteja)
+    composer require laravel/sail --dev
+    php artisan sail:install
 
-```env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=laravel
-DB_USERNAME=
-DB_PASSWORD=
-```
+    # Escolha os serviços que deseja (MySQL, Redis, etc). Para este projeto, MySQL é suficiente.
 
-3. Instale dependências:
+    # 4. Suba os containers Docker
+    ./vendor/bin/sail up -d
+    # Isso vai criar os containers com PHP, MySQL e outros serviços configurados.
 
-```bash
-composer install 
-```
+    # 5. Instale dependências do projeto
+    ./vendor/bin/sail composer install --no-dev --optimize-autoloader
 
-4. Gere a chave da aplicação:
+    # 6. Gere a chave da aplicação
+    ./vendor/bin/sail artisan key:generate
 
-```bash
-php artisan key:generate
-```
+    # 7. Rode as migrations e seeders
+    ./vendor/bin/sail artisan migrate --seed
 
+    # 8. Ajuste permissões para logs e cache (se necessário)
+    chmod -R 775 storage bootstrap/cache
 
-6. Ajuste permissões se precisar (para logs e cache):
+    # 9. Rodar o servidor local
+    ./vendor/bin/sail artisan serve
+    # A aplicação ficará disponível em http://localhost
 
-```bash
-sudo chown -R apache:apache storage bootstrap/cache
-sudo chmod -R 775 storage bootstrap/cache
-```
+    # 10. Rodar o scheduler ou comando de importação manualmente (opcional)
+    ./vendor/bin/sail artisan schedule:run
+    ./vendor/bin/sail artisan importa-carros
 
----
 
 ## 🔹 Executar o comando de importação
 
@@ -110,33 +116,16 @@ ou
 php artisan schedule:run
 ```
 
-Para agendar via cron (caso não esteja configurado):
-
-```bash
-* * * * * cd /var/www/teste-alpes && php artisan schedule:run >> /dev/null 2>&1
-```
-
-> Isso fará com que o Laravel execute automaticamente o comando de importação conforme definido no Kernel (`hourly`).
-
----
-
 ## 🔹 Rodar a aplicação e testes
 
-1. Com Nginx e PHP-FPM já configurados, a aplicação estará disponível em:  
-
-```
-https://alpes.wesio.online
-```
-
-2. Limpar e gerar caches:
+1. Limpar e gerar caches:
 
 ```bash
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 ```
-
-3. Rodar testes :
+2. Rodar testes :
 
 ```bash
 php artisan test
@@ -147,7 +136,7 @@ php artisan test
 ## 🔹 Deploy
 
 - **Automático via GitHub Actions**: o workflow atual faz pull do `main`, instala dependências e limpa caches.  
-- **Manual**: execute o script de deploy:
+- **Manual**: execute o script de deploy ( é necessário ter o pem na raiz do projeto):
 
 ```bash
 cd /var/www/teste-alpes
@@ -192,3 +181,25 @@ Você pode importar no **Postman** usando esta variável de ambiente:
 ```
 
 Use `{{base_url}}/api/cars` nos requests do Postman ou importe a collection que está no repositório junto ao envirioment
+
+
+## 🔹 Requisitos para rodar o projeto localmente
+
+# 1. Docker e Docker Compose
+# - Laravel Sail roda em containers, então é necessário ter o Docker instalado.
+# - Instale o Docker Desktop ou Docker Engine conforme seu sistema operacional.
+# - Verifique instalação:
+docker --version
+docker-compose --version
+
+# 2. PHP (opcional local, mas não obrigatório com Sail)
+# - Sail já fornece o PHP dentro do container, mas para rodar comandos fora do container você pode ter PHP >= 8.1.
+php -v
+
+# 3. Composer (opcional local, mas não obrigatório com Sail)
+# - Sail também já contém Composer dentro do container.
+composer --version
+
+# 4. Git
+# - Para clonar o repositório e controlar versionamento.
+git --version
